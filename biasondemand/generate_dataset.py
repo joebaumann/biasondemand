@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-def create_synth(dim=15000, l_y=4, l_m_y=0, thr_supp=1, l_h_r=1.5,  l_h_q=1, l_m=1, p_u=1, l_r=False, l_o=False, l_y_b=0, l_q=2, sy=5, l_r_q=0, l_m_y_non_linear=False):
+def generate_dataset(path='my_new_dataset', dim=15000, l_y=4, l_m_y=0, thr_supp=1, l_h_r=1.5,  l_h_q=1, l_m=1, p_u=1, l_r=False, l_o=False, l_y_b=0, l_q=2, sy=5, l_r_q=0, l_m_y_non_linear=False):
     """Generate a synthetic dataset.
 
     Parameters
@@ -68,7 +68,8 @@ def create_synth(dim=15000, l_y=4, l_m_y=0, thr_supp=1, l_h_r=1.5,  l_h_q=1, l_m
     # y target, with measurement and historical bias
     if l_m_y_non_linear:
         # non-linear implementation of measurement bias on target y
-        y = R - l_q*Q - l_y*A + l_m_y*A*(R<np.median(R)) - l_m_y*A*(R>=np.median(R)) + Ny + l_y_b*R*A
+        y = R - l_q*Q - l_y*A + l_m_y*A * \
+            (R < np.median(R)) - l_m_y*A*(R >= np.median(R)) + Ny + l_y_b*R*A
     else:
         # linear implementation of measurement bias on target Y
         y = R - l_q*Q - l_y*A - l_m_y*A + Ny + l_y_b*R*A
@@ -126,7 +127,28 @@ def create_synth(dim=15000, l_y=4, l_m_y=0, thr_supp=1, l_h_r=1.5,  l_h_q=1, l_m
     y_train_real = y_real[y_train.index]
     y_test_real = y_real[y_test.index]
 
-    return X_train, X_ind_train, X_supp_train, X_test, X_ind_test, X_supp_test, y_train, y_test, y_train_real, y_test_real
+    # return X_train, X_ind_train, X_supp_train, X_test, X_ind_test, X_supp_test, y_train, y_test, y_train_real, y_test_real
+
+    if path is None:
+        path = 'my_new_dataset'
+    path = f'datasets/{path}'
+    # create directory if it does not exist yet
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+    # save the generated dataset
+    X_train.to_csv(Path(path).joinpath('X_train.csv'))
+    X_ind_train.to_csv(Path(path).joinpath('X_ind_train.csv'))
+    X_supp_train.to_csv(Path(path).joinpath('X_supp_train.csv'))
+    X_test.to_csv(Path(path).joinpath('X_test.csv'))
+    X_ind_test.to_csv(Path(path).joinpath('X_ind_test.csv'))
+    X_supp_test.to_csv(Path(path).joinpath('X_supp_test.csv'))
+    y_train.to_csv(Path(path).joinpath('y_train.csv'))
+    y_test.to_csv(Path(path).joinpath('y_test.csv'))
+    y_train_real.to_csv(Path(path).joinpath('y_train_real.csv'))
+    y_test_real.to_csv(Path(path).joinpath('y_test_real.csv'))
+
+    print(
+        f'\n:)\n:) The dataset has been generated and saved in the directory {path}/\n:)')
 
 
 def main():
@@ -175,12 +197,6 @@ def main():
     args = parser.parse_args()
     args = vars(args)
 
-    path = args.pop('path', None)
-    if path is None:
-        path = 'my_new_dataset'
-    path = f'datasets/{path}'
-    # create directory if it does not exist yet
-    Path(path).mkdir(parents=True, exist_ok=True)
 
     if 'l_r' in args.keys():
         args['l_r'] = args['l_r'].lower() in ['true', '1', 1]
@@ -188,23 +204,7 @@ def main():
         args['l_o'] = args['l_o'].lower() in ['true', '1', 1]
 
     # generat the (biased) dataset
-    X_train, X_ind_train, X_supp_train, X_test, X_ind_test, X_supp_test, y_train, y_test, y_train_real, y_test_real = create_synth(
-        **args)
-
-    # save the generated dataset
-    X_train.to_csv(Path(path).joinpath('X_train.csv'))
-    X_ind_train.to_csv(Path(path).joinpath('X_ind_train.csv'))
-    X_supp_train.to_csv(Path(path).joinpath('X_supp_train.csv'))
-    X_test.to_csv(Path(path).joinpath('X_test.csv'))
-    X_ind_test.to_csv(Path(path).joinpath('X_ind_test.csv'))
-    X_supp_test.to_csv(Path(path).joinpath('X_supp_test.csv'))
-    y_train.to_csv(Path(path).joinpath('y_train.csv'))
-    y_test.to_csv(Path(path).joinpath('y_test.csv'))
-    y_train_real.to_csv(Path(path).joinpath('y_train_real.csv'))
-    y_test_real.to_csv(Path(path).joinpath('y_test_real.csv'))
-
-    print(
-        f'\n:)\n:) The dataset has been generated and saved in the directory {path}/\n:)')
+    generate_dataset(**args)
 
 
 if __name__ == "__main__":

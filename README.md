@@ -1,6 +1,6 @@
-# BiasOnDemand
+# Bias on Demand
 
-BiasOnDemand is a Python package that generates synthetic datasets with different types of bias. This package is based on the research paper "Bias on Demand: A Modelling Framework That Generates Synthetic Data With Bias" published at the ACM Conference on Fairness, Accountability, and Transparency (ACM FAccT) 2023.
+Biasondemand is a Python package that generates synthetic datasets with different types of bias. This package is based on the research paper "[Bias on Demand: A Modelling Framework That Generates Synthetic Data With Bias](https://doi.org/10.1145/3593013.3594058)" published at the ACM Conference on Fairness, Accountability, and Transparency (ACM FAccT) 2023.
 
 ## Authors & Contributors
 
@@ -8,32 +8,38 @@ Joachim Baumann, Alessandro Castelnovo, Riccardo Crupi, Nicole Inverardi, Daniel
 
 ## Installation
 
-To use BiasOnDemand, clone the repository and install the required packages:
+To use biasondemand, run:
 
 ```
-git clone https://github.com/rcrupiISP/BiasOnDemand.git
-cd BiasOnDemand
-pip install -r requirements.txt
+pip install biasondemand
 ```
-
-BiasOnDemand requires Python 3.8.10 or later.
 
 ## Usage
 
 ### Generating Synthetic Datasets
 
-To generate a synthetic dataset with no bias, use the following command:
-
+To generate a synthetic dataset with no bias, use the following python script:
 ```
-python generate_dataset.py -p my_unbiased_dataset -dim 1000
+import biasondemand
+biasondemand.generate_dataset(path='my_unbiased_dataset', dim=1000)
+```
+
+Alternatively, you can also run it directly from the command line using the following command:
+```
+bias_on_demand_generate_dataset -p my_unbiased_dataset -dim 1000
 ```
 
 This will generate a dataset with 1000 rows and save it in the directory `datasets/my_unbiased_dataset/`.
 
 You can introduce different types of bias into the dataset by specifying command line arguments. For example, to generate a dataset with measurement bias on the label Y (magnitude: 1.5) and historical bias on the feature R (magnitude: 2), use the following command:
-
 ```
-python generate_dataset.py -p my_biased_dataset -dim 1000 -l_m_y 1.5 -l_h_r 2
+import biasondemand
+biasondemand.generate_dataset(path='my_biased_dataset', dim=1000, l_m_y=1.5, l_h_r=2)
+```
+
+Or, again, if you prefer the command line, just use:
+```
+bias_on_demand_generate_dataset -p my_biased_dataset -dim 1000 -l_m_y 1.5 -l_h_r 2
 ```
 
 This will generate a biased dataset with 1000 rows and save it in the directory `datasets/my_biased_dataset/`.
@@ -59,19 +65,18 @@ Furthermore, the following command line arguments are available to specify the t
 Notice that the biases are introduced w.r.t. idividuals in the group A=1.
 For most types of bias, larger values mean more bias. The only exceptions are undersampling and representation bias (which can be seen as a specific type of undersampling conditional on the feature R) where smaller values correspond to more (conditional) undersampling, i.e., more bias.
 
-### Investigating Bias, Fairness, and Mitigation Techniques
+### Run experiments using biasondemand
 
-To investigate bias, fairness, and mitigation techniques, use the following command:
+In the repo [https://github.com/rcrupiISP/BiasOnDemand](https://github.com/rcrupiISP/BiasOnDemand) we provide the code and instructions to run a set of experiments for investigating bias, fairness, and mitigation techniques.
+You can also check out [our paper](https://doi.org/10.1145/3593013.3594058) for more details on this topic.
 
-```
-python plots.py
-```
+### Python version
 
-This will generate various plots for different scenarios (i.e., datasets containing different magnitudes and types of bias). You can comment out the different types of plots to be generated at the end of the `plots.py` file or adjust the `bias_plots` function to only include preferred scenarios to speed it up.
+Biasondemand requires Python 3.7 or later.
 
 ## Citation
 
-If you use BiasOnDemand in your research, please cite our paper:
+If you use biasondemand in your research, please cite our paper:
 
 ```
 @inproceedings{baumann2023bias,

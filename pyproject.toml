@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "biasondemand"
+dynamic = ["version"]
+description = "A Python package that generates synthetic datasets with different types of bias"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scikit_learn",
+]
+authors = [
+    {name = "Joachim Baumann", email = "joachimbaumann1@gmail.com"},
+    {name = "Alessandro Castelnovo", email = "alessandro.castelnovo@intesasanpaolo.com"},
+    {name = "Riccardo Crupi", email = "riccardo.crupi@intesasanpaolo.com"},
+    {name = "Nicole Inverardi", email = "nicole.inverardi@intesasanpaolo.com"},
+    {name = "Daniele Regoli", email = "daniele.regoli@intesasanpaolo.com"}
+    ]
+urls = {Homepage = "https://github.com/joebaumann/biasondemand"}
+requires-python = ">=3.7"
+keywords = ["bias", "dataset", "synthetic data"]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools.dynamic]
+version = {attr = "biasondemand.__version__"}
+
+[project.scripts]
+bias_on_demand_generate_dataset = "biasondemand.generate_dataset:main"
